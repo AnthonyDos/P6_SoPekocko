@@ -56,85 +56,20 @@ exports.getAllThing = (req, res ,next) => {
 exports.like = (req, res, next) => {
         switch (req.body.like) {
             case 1 :
-           
-            //.then((thing) => { 
-               // if(thing.usersLiked.find(user => user === req.body.userId)) {  
-               
                 Thing.updateOne({_id: req.params.id}, {$inc:{likes: +1} ,$push:{usersLiked:req.body.userId}})
+                    
                 .then(() => res.status(200).json({message:'j aime enregistré !'}))
                 .catch(error => res.status(400).json({ error }));
-                //}
-           // })  
-                
-                break
+            break
+
+            case 0 :
+                Thing.updateOne({_id: req.params.id}, {$inc:{dislikes: -1} ,$push:{usersDisliked:req.body.userId}})
+                .then(() => res.status(200).json({message:'Like retiré !'}))
+                .catch(error => res.status(400).json({ error }));
+
+
         }
     
-    //})         
+}         
     
     
-        // case -1 :
-        //     dislikes = []
-        //     userId = sauce.userId
-        //     dislikes = usersDisliked.push(userId)
-        //     dislikes.save()
-        //     .then(dislikes => res.status(200).json({message:'dislike enregistré !'}))
-        //     .catch(error => res.status(400).json({ error }));
-        //     console.log(dislikes)
-        //     break
-        // default  :
-        //     userId = []
-        //     .then(() => res.status(200).json())
-        //     .catch(error => res.status(400).json({ error }));
-    
-    //console.log(req.body.like)
-    
-//console.log(like)
-    
-
-
-
-
-
-
-
-
-    //////////////////////////////////////////////////////////////////////////////////
-    // if (likeSauce == 1){
-    //     sauceLike.save()
-    //     .then(sauceLike => res.status(200).json({message:'j aime enregistré !'}))
-    //     .catch(error => res.status(400).json({ error }));
-    // }else if (likeSauce == -1){
-    //     sauceLike.save()
-    //     .then(sauceLike => res.status(200).json({message:'Vous n \'aimez pas!'}))
-    //     .catch(error => res.status(400).json({ error }));
-    // }else (likeSauce == 0)
-    // .then(sauceLike => res.status(200).json())
-    // .catch(error => res.status(400).json({ error }));
-    ///////////////////////////////////////////////////////////////////////////////////////////////////////
-    // sauceLike.findOne ( 
-    //    // {  sku :  "abc123"  }, 
-    //     {  $max :  {  likes :  0 ,  "usersLiked" :  1  }  } 
-    // )
-    // $push: {likes, 'usersLiked' }
-    // console.log(userID)
-    //{/* if(sauceLike < $max){
-    //     userID : {sauceLike.$max}
-    //     $push : {req.body.userID }
-    //     sauceLike.save()
-    //     .then(sauceLike => res.status(200).json({message:'j aime enregistré !'}))
-    //     .catch(error => res.status(400).json({ error }));
-    // }else if (sauceLike > $min){
-    //     userID: {sauceLike.$min}
-    //     $push : {usersDisliked}
-    // } */
-    
-    
-
-    
-    
-}
-
-// console.log(exports.likes)
-// exports.dislikes = (req, res, next) => {
-
-// }
