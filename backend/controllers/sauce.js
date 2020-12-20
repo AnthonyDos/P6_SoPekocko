@@ -53,23 +53,25 @@ exports.getAllThing = (req, res ,next) => {
     .catch(error => res.status(400).json({ error }));
  };
 ///////////////////////////////////////////////////////////////////////////////////////////////////
+//Like et dislike
 exports.like = (req, res, next) => {
-        switch (req.body.like) {
-            case 1 :
-                Thing.updateOne({_id: req.params.id}, {$inc:{likes: +1} ,$push:{usersLiked:req.body.userId}})
-                    
-                .then(() => res.status(200).json({message:'j aime enregistré !'}))
-                .catch(error => res.status(400).json({ error }));
+    switch (req.body.like) {
+        case 1 :
+            Thing.updateOne({_id: req.params.id}, {$inc:{likes: +1} ,$push:{usersLiked:req.body.userId}})            
+            .then(() => res.status(200).json({message:'Like enregistré !'}))
+            .catch(error => res.status(400).json({ error }));
             break
 
-            case 0 :
-                Thing.updateOne({_id: req.params.id}, {$inc:{dislikes: -1} ,$push:{usersDisliked:req.body.userId}})
-                .then(() => res.status(200).json({message:'Like retiré !'}))
-                .catch(error => res.status(400).json({ error }));
+        case 0 :
+            Thing.updateOne({_id: req.params.id}, {$inc:{dislikes: -1} ,$push:{usersDisliked:req.body.userId}})
+            .then(() => res.status(200).json({message:'Like retiré !'}))
+            .catch(error => res.status(400).json({ error }));
 
-
-        }
-    
+        case -1 :
+            Thing.updateOne({_id: req.params.id}, {$inc:{dislikes: -1} ,$push:{usersDisliked:req.body.userId}})
+            .then(() => res.status(200).json({message:'Tu n\' aime pas la sauce !'}))
+            .catch(error => res.status(400).json({ error }));
+    }
 }         
     
     
