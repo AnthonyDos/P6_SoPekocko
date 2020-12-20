@@ -33,7 +33,7 @@ exports.deleteThing = (req, res, next) => {
     .then( thing => {
         const filename = thing.imageUrl.split('/images/')[1]; // on récupere l image url qui retourne un tableau avec les éléments avant split et après
         fs.unlink(`images/${filename}`,() =>{    //fs unlink : pour supprimer un fichier
-            Thing.deleteOne({ _id: req.params.id }) //ici on supprime la sauce dans la base de donnée
+            Thing.deleteOne({ _id: req.params.id }) //ici on supprime la sauce dans la base de donnée qui correspond au bon utilisateur
             .then(() => res.status(200).json ({ message: 'Sauce supprimé !'}))
             .catch(error => res.status(400).json({ error }))
         })
@@ -53,31 +53,64 @@ exports.getAllThing = (req, res ,next) => {
     .catch(error => res.status(400).json({ error }));
  };
 ///////////////////////////////////////////////////////////////////////////////////////////////////
-exports.likes = (req, res, next) => {
-    console.log(req )
-    const sauceLike = JSON.stringify(req.body.likes);
-    sauceLike.updateOne({_id: req.params.id});
-    const likeSauce = new sauceLike ({
-        userID:sauceLike.usersID,
-        usersDisliked : sauceLike.usersDisliked,
-        like : like +1,
-        dislikes : dislikes -1,
-        usersLiked: usersliked.push(userID),
-        usersDisliked: usersDisliked.push(userID)
-    })
-    console.log(likeSauce)
-    if (likeSauce == 1){
-        sauceLike.save()
-        .then(sauceLike => res.status(200).json({message:'j aime enregistré !'}))
-        .catch(error => res.status(400).json({ error }));
-    }else if (likeSauce == -1){
-        sauceLike.save()
-        .then(sauceLike => res.status(200).json({message:'Vous n \'aimez pas!'}))
-        .catch(error => res.status(400).json({ error }));
-    }else (likeSauce == 0)
-    .then(sauceLike => res.status(200).json())
-    .catch(error => res.status(400).json({ error }));
+exports.like = (req, res, next) => {
+        switch (req.body.like) {
+            case 1 :
+           
+            //.then((thing) => { 
+               // if(thing.usersLiked.find(user => user === req.body.userId)) {  
+               
+                Thing.updateOne({_id: req.params.id}, {$inc:{likes: +1} ,$push:{usersLiked:req.body.userId}})
+                .then(() => res.status(200).json({message:'j aime enregistré !'}))
+                .catch(error => res.status(400).json({ error }));
+                //}
+           // })  
+                
+                break
+        }
+    
+    //})         
+    
+    
+        // case -1 :
+        //     dislikes = []
+        //     userId = sauce.userId
+        //     dislikes = usersDisliked.push(userId)
+        //     dislikes.save()
+        //     .then(dislikes => res.status(200).json({message:'dislike enregistré !'}))
+        //     .catch(error => res.status(400).json({ error }));
+        //     console.log(dislikes)
+        //     break
+        // default  :
+        //     userId = []
+        //     .then(() => res.status(200).json())
+        //     .catch(error => res.status(400).json({ error }));
+    
+    //console.log(req.body.like)
+    
+//console.log(like)
+    
 
+
+
+
+
+
+
+
+    //////////////////////////////////////////////////////////////////////////////////
+    // if (likeSauce == 1){
+    //     sauceLike.save()
+    //     .then(sauceLike => res.status(200).json({message:'j aime enregistré !'}))
+    //     .catch(error => res.status(400).json({ error }));
+    // }else if (likeSauce == -1){
+    //     sauceLike.save()
+    //     .then(sauceLike => res.status(200).json({message:'Vous n \'aimez pas!'}))
+    //     .catch(error => res.status(400).json({ error }));
+    // }else (likeSauce == 0)
+    // .then(sauceLike => res.status(200).json())
+    // .catch(error => res.status(400).json({ error }));
+    ///////////////////////////////////////////////////////////////////////////////////////////////////////
     // sauceLike.findOne ( 
     //    // {  sku :  "abc123"  }, 
     //     {  $max :  {  likes :  0 ,  "usersLiked" :  1  }  } 
@@ -95,7 +128,7 @@ exports.likes = (req, res, next) => {
     //     $push : {usersDisliked}
     // } */
     
-    console.log(Likes)
+    
 
     
     
