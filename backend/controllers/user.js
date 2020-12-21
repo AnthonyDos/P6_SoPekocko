@@ -4,8 +4,15 @@ const jwt = require('jsonwebtoken');
 const User = require('../models/user');
 
 exports.signup = (req, res, next) => {
+    const password_regex = /^(?=.*[0-9]+.*)(?=.*[a-zA-Z]+.*)[0-9a-zA-Z]{8,}$/; 
+    const password = req.body.password
+    if(password.match(password_regex)){
+        res.status(200).json
+    } else{
+        throw error = "Le mot de passe n'est pas valide !";
+    }
     bcrypt.hash(req.body.password, 10)
-    .then( hash => {
+    .then( hash => {       
         const user = new User ({
             email: req.body.email,
             password: hash
@@ -16,6 +23,8 @@ exports.signup = (req, res, next) => {
     })
     .catch(error => res.status(500).json ({ error }));
 };
+
+
 
 exports.login = (req, res, next) => {
     User.findOne({ email: req.body.email})
