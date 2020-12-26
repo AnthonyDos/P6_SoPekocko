@@ -1,5 +1,6 @@
 //on importe ewpress
 const express = require('express');
+//const helmet = require('helmet')
 
 const bodyParse = require('body-parser'); // transforme le corps de la requête en JSON 
 const mongoose = require('mongoose');
@@ -8,8 +9,10 @@ const path = require('path')
 const sauceRoutes = require('./routes/sauce');
 const userRoutes = require('./routes/user');
 
-mongoose.connect("mongodb+srv://Anthonydos:Scooby060@cluster0.2yccv.mongodb.net/<dbname>?retryWrites=true&w=majority",
-    {useNewUrlParser: true,
+//sécurité
+require('dotenv').config();
+mongoose.connect(process.env.DB_TEST,
+{   useNewUrlParser: true,
     useUnifiedTopology: true 
 })
 .then(() => console.log('Connexion à MongoDB réussie !'))
@@ -17,6 +20,18 @@ mongoose.connect("mongodb+srv://Anthonydos:Scooby060@cluster0.2yccv.mongodb.net/
 
 //permet de  cree une application express
 const app = express();
+
+// app.use(helmet())
+// app.get('/', (req, res) => { 
+//     res.send("This is the Demo page for"+ " setting up express server !") 
+// }); 
+  
+// app.listen(3000, (err) => { 
+//     if (err) { console.log(err); } 
+//     else { console.log('Server started " + "at http://localhost:3000')} 
+// }); 
+
+
 
 //permet d'accéder a l'api sans complication
 app.use((req, res, next) => {
@@ -31,6 +46,9 @@ app.use(bodyParse.json());
 app.use('/images', express.static(path.join(__dirname,'images'))) 
 app.use('/api/sauces', sauceRoutes);
 app.use('/api/auth', userRoutes)
+
+
+
 
 //on exporte pour que l'on puisse l'utiliser depuis les autres fichiers
 module.exports = app;
