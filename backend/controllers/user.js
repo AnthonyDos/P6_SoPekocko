@@ -1,11 +1,14 @@
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
+require('dotenv').config();
+const sanitize = require('express-mongo-sanitize') //
+const User = require('../models/User');
 
-const User = require('../models/user');
 
 exports.signup = (req, res, next) => {
+    email = sanitize(req.body.email)
     const password_regex = /^(?=.*[0-9]+.*)(?=.*[a-zA-Z]+.*)[0-9a-zA-Z]{8,}$/; 
-    const password = req.body.password
+    password = (req.body.password)
     if(password.match(password_regex)){
         res.status(200).json
     } else{
@@ -19,9 +22,9 @@ exports.signup = (req, res, next) => {
         })
         user.save()
         .then(() => res.status(201).json({ message: 'Utilisateur créé !'}))
-        .catch(error => res.status(400).json ({ error }))
+        .catch(error => res.status(400).json ({ error : 'erreur server' }))
     })
-    .catch(error => res.status(500).json ({ error }));
+    .catch(error => res.status(500).json ({ error: 'Le mot de passe ne respecte pas les obligations !' }));
 };
 
 
@@ -41,12 +44,12 @@ exports.login = (req, res, next) => {
                 userId: user._id,
                 token: jwt.sign (
                     { userId: user._id },
-                    'RANDOM_TOKEN_SECRET',
+                    process.env.JWT_TOKEN,
                     { expiresIn: '24h' }
                 )       
             })
         })
-        .catch(error => res.status(500).json({ error }))
+        .catch(error => res.status(500).json({ error:'erreur server !' }))
     })
-    .catch(error => res.status(500).json({ error }));
+    .catch(error => res.status(500).json({ error : 'erreur server'}));
 };
