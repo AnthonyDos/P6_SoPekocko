@@ -1,16 +1,15 @@
-//on importe ewpress
+//on importe les elements
 const express = require('express');
 const helmet = require('helmet')
 const mongoSanitize = require("express-mongo-sanitize");
-const bodyParse = require('body-parser'); // transforme le corps de la requête en JSON 
+const bodyParse = require('body-parser'); 
 const mongoose = require('mongoose');
 const path = require('path')
 
 const sauceRoutes = require('./routes/sauce');
 const userRoutes = require('./routes/user');
 
-//sécurité
-//app.use(mongoSanitize())
+
 require('dotenv').config();
 mongoose.connect(process.env.DB_TEST,
 {   useNewUrlParser: true,
@@ -30,6 +29,7 @@ app.use((req, res, next) => {
     next();
 });
 
+app.use(mongoSanitize());
 app.use(helmet())
 
 app.use(bodyParse.json());

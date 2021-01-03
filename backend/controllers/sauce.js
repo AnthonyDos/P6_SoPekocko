@@ -1,6 +1,6 @@
 const Thing = require('../models/Thing');
 const fs = require('fs');
-//const { find } = require('../models/Thing');
+
 
 
 //fonction qui reçois la requête et la réponse
@@ -56,7 +56,8 @@ exports.getAllThing = (req, res ,next) => {
 //Like et dislike
 exports.like = (req, res, next) => {
     Thing.findOne({ _id: req.params.id })
-    .then(thing => {
+    .then(thing => { 
+        console.log(thing)
         switch (req.body.like) {
             //like
             case 1 :
@@ -66,7 +67,7 @@ exports.like = (req, res, next) => {
                 break
             //neutre
             case 0 :
-                if (thing.usersDisliked.includes(req.body.userId)) {
+                if (thing.usersDisliked.includes(req.body.userId)) { 
                     Thing.updateOne({_id: req.params.id}, {$inc:{dislikes: -1} ,$pull:{usersDisliked: req.body.userId}})
                     .then(() => res.status(200).json({message:'Dislike retiré !'}))
                     .catch(error => res.status(400).json({ error }));
